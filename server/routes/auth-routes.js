@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+let { generateToken, tokenList } = require('../controllers/token_generator');
 
 // To return the user data to the client
 router.get("/check", (req, res) => {
@@ -9,6 +10,8 @@ router.get("/check", (req, res) => {
   if (req.user === undefined) {
     res.json({});
   } else {
+    res.set('x-auth-token', req.session.token || "Not authorised");
+    res.set('refresh-token', req.session.refreshToken || "Not authorised");
     res.json({
       user: req.user
     });
@@ -22,16 +25,15 @@ router.get("/github", passport.authenticate("github"));
 router.get(
   "/github/redirect",
   passport.authenticate("github", { failureRedirect: "/" }),
-  (req, res) => {
-    // For redirecting into the client app
-    res.redirect("http://localhost:8080/");
-  }
+  generateToken
 );
 
 // The API to log out, it clears req.user
 router.get('/logout', function(req, res, next) {
   req.logout();
-  res.json({ msg: "Logged out" });
+  delete tokenList[req.session.refreshToken];
+  req.session = {};
+  res.json({ msg: "Logged out", "tokenlist" : tokenList});
 });
 
 module.exports = router;

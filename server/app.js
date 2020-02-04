@@ -15,10 +15,12 @@ var authRouter = require('./routes/auth-routes');
 var mongoose = require("mongoose");
 
 var app = express();
+require('dotenv').config();
 
 var corsOption = {
   origin: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  exposedHeaders: ['x-auth-token', 'refresh-token'],
   credentials: true
 };
 
