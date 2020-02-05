@@ -1,7 +1,7 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var passport = require('passport');
-let { generateToken, tokenList } = require('../controllers/token_generator');
+var passport = require("passport");
+let { generateToken, tokenList } = require("../controllers/token_generator");
 
 // To return the user data to the client
 router.get("/check", (req, res) => {
@@ -10,8 +10,8 @@ router.get("/check", (req, res) => {
   if (req.user === undefined) {
     res.json({});
   } else {
-    res.set('x-auth-token', req.session.token || "Not authorised");
-    res.set('refresh-token', req.session.refreshToken || "Not authorised");
+    res.set("x-auth-token", req.session.token || "Not authorised");
+    res.set("refresh-token", req.session.refreshToken || "Not authorised");
     res.json({
       user: req.user
     });
@@ -29,11 +29,11 @@ router.get(
 );
 
 // The API to log out, it clears req.user
-router.get('/logout', function(req, res, next) {
+router.get("/logout", function(req, res, next) {
   req.logout();
   delete tokenList[req.session.refreshToken];
   req.session = {};
-  res.json({ msg: "Logged out", "tokenlist" : tokenList});
+  res.json({ msg: "Logged out", tokenlist: tokenList });
 });
 
 module.exports = router;
