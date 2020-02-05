@@ -9,8 +9,8 @@ router.get("/", function(req, res, next) {
 
 router.get("/hello", checkToken, (req, res) => {
   res.json({
-    message: "Hey! You can see this message as you are authorised to!"
-  });
+    'message' : "Hey! You can see this message as you are authorised to!"
+  })
 });
 
 module.exports = router;
